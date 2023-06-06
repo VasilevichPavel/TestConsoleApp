@@ -22,10 +22,7 @@ namespace TestConsoleApp.Core.Services
             ArgumentNullException.ThrowIfNull(logger);
             _githubSetting = githubOption.Value;
 
-            _httpClient.DefaultRequestHeaders.Accept.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue(_githubSetting.MediaType));
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", _githubSetting.UserAgent);
+            ConfigureHttpClient();
 
             ArgumentNullException.ThrowIfNull(logger);
             _logger = logger;
@@ -34,9 +31,25 @@ namespace TestConsoleApp.Core.Services
         public async Task<List<Repository>> GetRepositoriesAsync()
         {
             _logger.LogInformation("Call API");
-            var result = await _httpClient.GetStringAsync(_githubSetting.API);
+
+            var result = string.Empty;
+
+            using (_httpClient)
+            {
+                result = await _httpClient.GetStringAsync(_githubSetting.API);
+            }
+
             var models = JsonConvert.DeserializeObject<List<Repository>>(result);
             return models ?? throw new Exception("Wrong Deserialization");
+        }
+
+        private void ConfigureHttpClient()
+        {
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
+            _httpClient.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue(_githubSetting.MediaType));
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", _githubSetting.UserAgent);
+
         }
     }
 }
