@@ -10,15 +10,34 @@ IServiceProvider serviceProvider = services.BuildServiceProvider();
 
 var logger = serviceProvider.GetService<ILoggerFactory>()?.CreateLogger<Program>();
 ArgumentNullException.ThrowIfNull(logger);
+await TryCallServicesAsync();
 
-logger.LogInformation("Start");
 
-var githubService = serviceProvider.GetService<IGithubService>();
-ArgumentNullException.ThrowIfNull(githubService);
+async Task TryCallServicesAsync()
+{
+    logger.LogInformation("Start");
 
-var repositories = await githubService.GetRepositoriesAsync();
+    try
+    {
+        await CallServicesAsync();
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "ERROR");
+    }
 
-var showService = serviceProvider.GetService<IDisplayService>();
-ArgumentNullException.ThrowIfNull(showService);
+    logger.LogInformation("End");
+}
 
-showService.Show(repositories);
+async Task CallServicesAsync()
+{
+    var githubService = serviceProvider.GetService<IGithubService>();
+    ArgumentNullException.ThrowIfNull(githubService);
+
+    var repositories = await githubService.GetRepositoriesAsync();
+
+    var showService = serviceProvider.GetService<IDisplayService>();
+    ArgumentNullException.ThrowIfNull(showService);
+
+    showService.Show(repositories);
+}
