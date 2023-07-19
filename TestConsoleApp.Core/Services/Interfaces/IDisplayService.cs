@@ -4,6 +4,7 @@ namespace TestConsoleApp.Core.Services.Interfaces
 {
     public interface IDisplayService
     {
-        void Show(List<Repository> repositories);
+        void Show(IEnumerable<Repository> repositories);
+        void Show(IEnumerable<Repository> repositories, string title);
     }
 }

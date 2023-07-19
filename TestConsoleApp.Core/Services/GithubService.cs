@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using TestConsoleApp.Core.Exceptions;
 using TestConsoleApp.Core.Models;
 using TestConsoleApp.Core.Services.Interfaces;
 using TestConsoleApp.Core.Settings;
@@ -40,16 +41,14 @@ namespace TestConsoleApp.Core.Services
             }
 
             var models = JsonConvert.DeserializeObject<List<Repository>>(result);
-            return models ?? throw new Exception("Wrong Deserialization");
+            return models ?? throw new DeserializationException();
         }
 
         private void ConfigureHttpClient()
         {
             _httpClient.DefaultRequestHeaders.Accept.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue(_githubSetting.MediaType));
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(_githubSetting.MediaType));
             _httpClient.DefaultRequestHeaders.Add("User-Agent", _githubSetting.UserAgent);
-
         }
     }
 }

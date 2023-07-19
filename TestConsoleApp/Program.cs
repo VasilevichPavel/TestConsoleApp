@@ -31,13 +31,8 @@ async Task TryCallServicesAsync()
 
 async Task CallServicesAsync()
 {
-    var githubService = serviceProvider.GetService<IGithubService>();
-    ArgumentNullException.ThrowIfNull(githubService);
+    var repositoryService = serviceProvider.GetService<IRepositoryService>();
+    ArgumentNullException.ThrowIfNull(repositoryService);
 
-    var repositories = await githubService.GetRepositoriesAsync();
-
-    var showService = serviceProvider.GetService<IDisplayService>();
-    ArgumentNullException.ThrowIfNull(showService);
-
-    showService.Show(repositories);
+    await repositoryService.LaunchAsync();
 }
