@@ -10,7 +10,7 @@ namespace TestConsoleApp.Core.DependencyInjection
         {
             services.AddTransient<IDisplayService, DisplayService>();
             services.AddTransient<IGithubService, GithubService>();
-            services.AddTransient<IRepositoryService, RepositoryService>();
+            services.AddTransient<IGitRepositoryService, GitRepositoryService>();
             services.AddTransient<HttpClient>();
             return services;
         }

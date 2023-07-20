@@ -1,6 +1,6 @@
 ﻿namespace TestConsoleApp.Core.Services.Interfaces
 {
-    public interface IRepositoryService
+    public interface IGitRepositoryService
     {
         Task LaunchAsync();
     }
